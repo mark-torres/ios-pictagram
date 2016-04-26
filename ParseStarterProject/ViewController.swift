@@ -34,6 +34,15 @@ class ViewController: UIViewController {
 		mainSpinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
 		self.view.addSubview(mainSpinner)
     }
+	
+	override func viewDidAppear(animated: Bool) {
+		// check if there's an active user
+		loadActiveUser()
+		if activeUsername.isEmpty == false {
+			print("Saved user: \(activeUsername)")
+			self.performSegueWithIdentifier("login", sender: self)
+		}
+	}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -57,7 +66,15 @@ class ViewController: UIViewController {
 			// Login Parse user
 			PFUser.logInWithUsernameInBackground(username, password: password, block: { (user, error) -> Void in
 				if user != nil {
-					self.showAlert("Alert", alertMessage: "Logged in!")
+					// MARK: Login successful
+					
+					// save active user
+					activeUsername = username
+					activePassword = password
+					saveActiveUser()
+					
+					// go to home screen
+					self.performSegueWithIdentifier("login", sender: self)
 				} else {
 					let errorString = error?.userInfo["error"] as? String ?? "Please try again"
 					self.showAlert("Error", alertMessage: errorString)
@@ -89,7 +106,15 @@ class ViewController: UIViewController {
 					let errorString = error?.userInfo["error"] as? String ?? "Please try again"
 					self.showAlert("Error", alertMessage: errorString)
 				} else {
-					self.showAlert("Alert", alertMessage: "Successful")
+					// MARK: Signup successful
+					
+					// save active user
+					activeUsername = username
+					activePassword = password
+					saveActiveUser()
+					
+					// go to home screen
+					self.performSegueWithIdentifier("login", sender: self)
 				}
 			})
 		}
