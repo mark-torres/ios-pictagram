@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // ****************************************************************************
         // Uncomment and fill in with your Parse credentials:
-        // Parse.setApplicationId("your_application_id", clientKey: "your_client_key")
+        Parse.setApplicationId("g0ii8WkcnvcEWh4IA1dLYj98DD7x7BXYfNEXI8zl", clientKey: "0up52KwcYdQYjduNmqz6lsjKDAtkriOnUvwfyMP8")
         //
         // If you are using Facebook, uncomment and add your FacebookAppID to your bundle's plist as
         // described here: https://developers.facebook.com/docs/getting-started/facebook-sdk-for-ios/
