@@ -13,6 +13,9 @@ class TableViewController: UITableViewController {
 	
 	var usernames: [String]!
 	var userIds: [String]!
+	var following: [Bool]!
+	var mainSpinner: UIActivityIndicatorView!
+	var currentUser: PFUser!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,30 +26,65 @@ class TableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 		
-		// get users list
+		// Main spinner
+		mainSpinner = UIActivityIndicatorView( frame: CGRect(x: 0, y: 0, width: 80, height: 80)	)
+		mainSpinner.center = self.view.center
+		mainSpinner.hidesWhenStopped = true
+		mainSpinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+		self.view.addSubview(mainSpinner)
+
+		following = []
 		usernames = []
 		userIds = []
-		var parseUsers = [String:String]()
-		let currentUser = PFUser.currentUser()
-		let query = PFUser.query()
-		query?.findObjectsInBackgroundWithBlock({ (pfObjects, error) -> Void in
-			if let users = pfObjects as? [PFUser] {
-				for user in users {
-					if user.objectId != currentUser?.objectId {
-						parseUsers[user.username!] = user.objectId!
+		currentUser = PFUser.currentUser()
+
+		// get follows data
+		let followsQuery = PFQuery(className: "Follows")
+		followsQuery.whereKey("followerId", equalTo: (currentUser?.objectId)!)
+		showMainSpinner()
+		followsQuery.findObjectsInBackgroundWithBlock { (followsResult, error) -> Void in
+			self.hideMainSpinner()
+			// get users followed by current user
+			var followingIds: [String] = []
+			if let follows = followsResult {
+				for follow in follows {
+					let userId = follow["userId"] as? String ?? ""
+					if userId.isEmpty == false {
+						followingIds.append(userId)
 					}
 				}
 			}
-			// sort my username
-			let sortedUsers = parseUsers.sort { $0.0 < $1.0 }
-			for (username, userId) in sortedUsers {
-				self.usernames.append(username)
-				self.userIds.append(userId)
-			}
-			print(self.usernames)
-			print(self.userIds)
-			self.tableView.reloadData()
-		})
+			print(followingIds)
+			
+			// get users list
+			var parseUsers = [String:String]()
+			let query = PFUser.query()
+			self.showMainSpinner()
+			query?.findObjectsInBackgroundWithBlock({ (pfObjects, error) -> Void in
+				self.hideMainSpinner()
+				if let users = pfObjects as? [PFUser] {
+					for user in users {
+						if user.objectId != self.currentUser?.objectId {
+							parseUsers[user.username!] = user.objectId!
+						}
+					}
+				}
+				// sort by username ascending (<)
+				// http://www.timdietrich.me/blog/swift-sorting-dictionaries-by-keys/
+				let unsortedUsernames = Array(parseUsers.keys)
+				self.usernames = unsortedUsernames.sort(<)
+				for username in self.usernames {
+					self.userIds.append(parseUsers[username]!)
+					let followedUser = followingIds.indexOf(parseUsers[username]!) != nil ? true : false
+					self.following.append(followedUser)
+				}
+				print(self.usernames)
+				print(self.userIds)
+				
+				// reload table data
+				self.tableView.reloadData()
+			})
+		}
     }
 
     override func didReceiveMemoryWarning() {
@@ -72,11 +110,47 @@ class TableViewController: UITableViewController {
 
         // Configure the cell...
 		cell.textLabel?.text = usernames[indexPath.row]
+		
+		if following[indexPath.row] == true {
+			cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+		} else {
+			cell.accessoryType = UITableViewCellAccessoryType.None
+		}
 
         return cell
     }
 
+	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+		print(indexPath.row)
+		let cell: UITableViewCell = tableView.cellForRowAtIndexPath(indexPath)!
+		
+		// TODO: Save follow / unfollow to parse
 
+//		let query = PFQuery(className: "Follows")
+//		query.whereKey("followerId", equalTo: (currentUser?.objectId)!)
+//		showMainSpinner()
+//		query.findObjectsInBackgroundWithBlock { (result, error) -> Void in
+//			if let follows = result {
+//				
+//			}
+//		}
+//		
+//		if following[indexPath.row] == true {
+//			// Following, make unfollow
+//			following[indexPath.row] = false
+//		} else {
+//			// not following, make follow
+//			following[indexPath.row] = true
+//		}
+		
+		following[indexPath.row] = !following[indexPath.row]
+		if following[indexPath.row] == true {
+			cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+		} else {
+			cell.accessoryType = UITableViewCellAccessoryType.None
+		}
+	}
+	
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -122,4 +196,23 @@ class TableViewController: UITableViewController {
     }
     */
 
+	// MARK: Utility fuctions
+	
+	func showAlert(alertTitle: String, alertMessage: String) -> Void {
+		let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
+		alert.addAction( UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(action)-> Void in
+			self.dismissViewControllerAnimated(true, completion: nil)
+		}) )
+		presentViewController(alert, animated: true, completion: nil)
+	}
+	
+	func showMainSpinner() {
+		mainSpinner.startAnimating()
+		UIApplication.sharedApplication().beginIgnoringInteractionEvents()
+	}
+	
+	func hideMainSpinner() {
+		mainSpinner.stopAnimating()
+		UIApplication.sharedApplication().endIgnoringInteractionEvents()
+	}
 }
