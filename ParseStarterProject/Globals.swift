@@ -8,6 +8,7 @@
 
 import Foundation
 
+/*
 let userStorage = NSUserDefaults.standardUserDefaults()
 
 var activeUsername = ""
@@ -24,6 +25,9 @@ func loadActiveUser() {
 }
 
 func clearActiveUser() {
+	activeUsername = ""
+	activePassword = ""
 	userStorage.removeObjectForKey("activeUsername")
 	userStorage.removeObjectForKey("activePassword")
 }
+*/

@@ -37,9 +37,7 @@ class ViewController: UIViewController {
 	
 	override func viewDidAppear(animated: Bool) {
 		// check if there's an active user
-		loadActiveUser()
-		if activeUsername.isEmpty == false {
-			print("Saved user: \(activeUsername)")
+		if PFUser.currentUser() != nil {
 			self.performSegueWithIdentifier("login", sender: self)
 		}
 	}
@@ -67,11 +65,6 @@ class ViewController: UIViewController {
 			PFUser.logInWithUsernameInBackground(username, password: password, block: { (user, error) -> Void in
 				if user != nil {
 					// MARK: Login successful
-					
-					// save active user
-					activeUsername = username
-					activePassword = password
-					saveActiveUser()
 					
 					// go to home screen
 					self.performSegueWithIdentifier("login", sender: self)
@@ -107,11 +100,6 @@ class ViewController: UIViewController {
 					self.showAlert("Error", alertMessage: errorString)
 				} else {
 					// MARK: Signup successful
-					
-					// save active user
-					activeUsername = username
-					activePassword = password
-					saveActiveUser()
 					
 					// go to home screen
 					self.performSegueWithIdentifier("login", sender: self)
