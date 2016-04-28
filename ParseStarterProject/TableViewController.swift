@@ -125,30 +125,35 @@ class TableViewController: UITableViewController {
 		let cell: UITableViewCell = tableView.cellForRowAtIndexPath(indexPath)!
 		
 		// TODO: Save follow / unfollow to parse
-
-//		let query = PFQuery(className: "Follows")
-//		query.whereKey("followerId", equalTo: (currentUser?.objectId)!)
-//		showMainSpinner()
-//		query.findObjectsInBackgroundWithBlock { (result, error) -> Void in
-//			if let follows = result {
-//				
-//			}
-//		}
-//		
-//		if following[indexPath.row] == true {
-//			// Following, make unfollow
-//			following[indexPath.row] = false
-//		} else {
-//			// not following, make follow
-//			following[indexPath.row] = true
-//		}
-		
-		following[indexPath.row] = !following[indexPath.row]
 		if following[indexPath.row] == true {
-			cell.accessoryType = UITableViewCellAccessoryType.Checkmark
-		} else {
+			// Following, make unfollow
+			following[indexPath.row] = false
 			cell.accessoryType = UITableViewCellAccessoryType.None
+			let query = PFQuery(className: "Follows")
+			query.whereKey("followerId", equalTo: (currentUser?.objectId)!)
+			query.whereKey("userId", equalTo: userIds[indexPath.row])
+			showMainSpinner()
+			query.findObjectsInBackgroundWithBlock { (result, error) -> Void in
+				self.hideMainSpinner()
+				let follows = result as [PFObject]? ?? [PFObject]()
+				if follows.count > 0 {
+					let follow = follows[0]
+					follow.deleteInBackground()
+				}
+			}
+		} else {
+			// not following, make follow
+			following[indexPath.row] = true
+			cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+			let follow = PFObject(className: "Follows")
+			follow["userId"] = userIds[indexPath.row]
+			follow["followerId"] = currentUser.objectId
+			showMainSpinner()
+			follow.saveInBackgroundWithBlock({ (success, error) -> Void in
+				self.hideMainSpinner()
+			})
 		}
+
 	}
 	
     /*
