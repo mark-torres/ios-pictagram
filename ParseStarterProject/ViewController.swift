@@ -28,7 +28,8 @@ class ViewController: UIViewController {
 		// MARK: Initialize stuff
 		
 		// Main spinner
-		mainSpinner = UIActivityIndicatorView( frame: CGRect(x: 0, y: 0, width: 80, height: 80)	)
+		mainSpinner = UIActivityIndicatorView( frame: self.view.frame )
+		mainSpinner.backgroundColor = UIColor(white: 1.0, alpha: 0.5)
 		mainSpinner.center = self.view.center
 		mainSpinner.hidesWhenStopped = true
 		mainSpinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
@@ -37,7 +38,7 @@ class ViewController: UIViewController {
 	
 	override func viewDidAppear(animated: Bool) {
 		// check if there's an active user
-		if PFUser.currentUser() != nil {
+		if PFUser.currentUser()?.objectId != nil {
 			self.performSegueWithIdentifier("login", sender: self)
 		}
 	}
@@ -112,9 +113,7 @@ class ViewController: UIViewController {
 	
 	func showAlert(alertTitle: String, alertMessage: String) -> Void {
 		let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
-		alert.addAction( UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(action)-> Void in
-			self.dismissViewControllerAnimated(true, completion: nil)
-		}) )
+		alert.addAction( UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil) )
 		presentViewController(alert, animated: true, completion: nil)
 	}
 	

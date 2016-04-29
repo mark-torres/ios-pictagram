@@ -16,6 +16,7 @@ class TableViewController: UITableViewController {
 	var following: [Bool]!
 	var mainSpinner: UIActivityIndicatorView!
 	var currentUser: PFUser!
+	var refresher: UIRefreshControl!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,65 +27,24 @@ class TableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 		
+		// Refresher
+		refresher = UIRefreshControl()
+		refresher.attributedTitle = NSAttributedString(string: "Pull to refresh")
+		refresher.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
+		tableView.addSubview(refresher)
+		
 		// Main spinner
-		mainSpinner = UIActivityIndicatorView( frame: CGRect(x: 0, y: 0, width: 80, height: 80)	)
+		mainSpinner = UIActivityIndicatorView( frame: self.view.frame )
+		mainSpinner.backgroundColor = UIColor(white: 1.0, alpha: 0.5)
 		mainSpinner.center = self.view.center
 		mainSpinner.hidesWhenStopped = true
 		mainSpinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
 		self.view.addSubview(mainSpinner)
 
-		following = []
-		usernames = []
-		userIds = []
 		currentUser = PFUser.currentUser()
 
-		// get follows data
-		let followsQuery = PFQuery(className: "Follows")
-		followsQuery.whereKey("followerId", equalTo: (currentUser?.objectId)!)
-		showMainSpinner()
-		followsQuery.findObjectsInBackgroundWithBlock { (followsResult, error) -> Void in
-			self.hideMainSpinner()
-			// get users followed by current user
-			var followingIds: [String] = []
-			if let follows = followsResult {
-				for follow in follows {
-					let userId = follow["userId"] as? String ?? ""
-					if userId.isEmpty == false {
-						followingIds.append(userId)
-					}
-				}
-			}
-			print(followingIds)
-			
-			// get users list
-			var parseUsers = [String:String]()
-			let query = PFUser.query()
-			self.showMainSpinner()
-			query?.findObjectsInBackgroundWithBlock({ (pfObjects, error) -> Void in
-				self.hideMainSpinner()
-				if let users = pfObjects as? [PFUser] {
-					for user in users {
-						if user.objectId != self.currentUser?.objectId {
-							parseUsers[user.username!] = user.objectId!
-						}
-					}
-				}
-				// sort by username ascending (<)
-				// http://www.timdietrich.me/blog/swift-sorting-dictionaries-by-keys/
-				let unsortedUsernames = Array(parseUsers.keys)
-				self.usernames = unsortedUsernames.sort(<)
-				for username in self.usernames {
-					self.userIds.append(parseUsers[username]!)
-					let followedUser = followingIds.indexOf(parseUsers[username]!) != nil ? true : false
-					self.following.append(followedUser)
-				}
-				print(self.usernames)
-				print(self.userIds)
-				
-				// reload table data
-				self.tableView.reloadData()
-			})
-		}
+		// load data
+		refresh()
     }
 
     override func didReceiveMemoryWarning() {
@@ -205,9 +165,7 @@ class TableViewController: UITableViewController {
 	
 	func showAlert(alertTitle: String, alertMessage: String) -> Void {
 		let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
-		alert.addAction( UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(action)-> Void in
-			self.dismissViewControllerAnimated(true, completion: nil)
-		}) )
+		alert.addAction( UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil) )
 		presentViewController(alert, animated: true, completion: nil)
 	}
 	
@@ -219,5 +177,60 @@ class TableViewController: UITableViewController {
 	func hideMainSpinner() {
 		mainSpinner.stopAnimating()
 		UIApplication.sharedApplication().endIgnoringInteractionEvents()
+	}
+	
+	func refresh() {
+		print("refresh invoked")
+		following = []
+		usernames = []
+		userIds = []
+		// get follows data
+		let followsQuery = PFQuery(className: "Follows")
+		followsQuery.whereKey("followerId", equalTo: (currentUser?.objectId)!)
+		showMainSpinner()
+		followsQuery.findObjectsInBackgroundWithBlock { (followsResult, error) -> Void in
+			self.hideMainSpinner()
+			// get users followed by current user
+			var followingIds: [String] = []
+			if let follows = followsResult {
+				for follow in follows {
+					let userId = follow["userId"] as? String ?? ""
+					if userId.isEmpty == false {
+						followingIds.append(userId)
+					}
+				}
+			}
+			print(followingIds)
+			
+			// get users list
+			var parseUsers = [String:String]()
+			let query = PFUser.query()
+			self.showMainSpinner()
+			query?.findObjectsInBackgroundWithBlock({ (pfObjects, error) -> Void in
+				self.hideMainSpinner()
+				self.refresher.endRefreshing()
+				if let users = pfObjects as? [PFUser] {
+					for user in users {
+						if user.objectId != self.currentUser?.objectId {
+							parseUsers[user.username!] = user.objectId!
+						}
+					}
+				}
+				// sort by username ascending (<)
+				// http://www.timdietrich.me/blog/swift-sorting-dictionaries-by-keys/
+				let unsortedUsernames = Array(parseUsers.keys)
+				self.usernames = unsortedUsernames.sort(<)
+				for username in self.usernames {
+					self.userIds.append(parseUsers[username]!)
+					let followedUser = followingIds.indexOf(parseUsers[username]!) != nil ? true : false
+					self.following.append(followedUser)
+				}
+				print(self.usernames)
+				print(self.userIds)
+				
+				// reload table data
+				self.tableView.reloadData()
+			})
+		}
 	}
 }
