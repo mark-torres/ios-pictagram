@@ -15,7 +15,6 @@ class TableViewController: UITableViewController {
 	var userIds: [String]!
 	var following: [Bool]!
 	var mainSpinner: UIActivityIndicatorView!
-	var currentUser: PFUser!
 	var refresher: UIRefreshControl!
 
     override func viewDidLoad() {
@@ -211,7 +210,7 @@ class TableViewController: UITableViewController {
 				self.refresher.endRefreshing()
 				if let users = pfObjects as? [PFUser] {
 					for user in users {
-						if user.objectId != self.currentUser?.objectId {
+						if user.objectId != currentUser?.objectId {
 							parseUsers[user.username!] = user.objectId!
 						}
 					}
@@ -231,6 +230,20 @@ class TableViewController: UITableViewController {
 				// reload table data
 				self.tableView.reloadData()
 			})
+		}
+	}
+	
+	// MARK: Segues
+	
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+		if segue.identifier == "feed" {
+			// TODO: make a list of users followed and pass it to the feed
+			followedUsers = [:]
+			for (index, value) in userIds.enumerate() {
+				if following[index] == true {
+					followedUsers[ value ] = usernames[index]
+				}
+			}
 		}
 	}
 }

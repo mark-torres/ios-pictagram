@@ -6,28 +6,8 @@
 //  Copyright © 2016 Parse. All rights reserved.
 //
 
-import Foundation
+import Parse
 
-/*
-let userStorage = NSUserDefaults.standardUserDefaults()
+var followedUsers: [String:String]!
+var currentUser: PFUser!
 
-var activeUsername = ""
-var activePassword = ""
-
-func saveActiveUser() {
-	userStorage.setObject(activeUsername, forKey: "activeUsername")
-	userStorage.setObject(activePassword, forKey: "activePassword")
-}
-
-func loadActiveUser() {
-	activeUsername = userStorage.objectForKey("activeUsername") as? String ?? ""
-	activePassword = userStorage.objectForKey("activePassword") as? String ?? ""
-}
-
-func clearActiveUser() {
-	activeUsername = ""
-	activePassword = ""
-	userStorage.removeObjectForKey("activeUsername")
-	userStorage.removeObjectForKey("activePassword")
-}
-*/

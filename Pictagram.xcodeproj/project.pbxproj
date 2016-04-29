@@ -17,6 +17,8 @@
 		81BA81791A49E0DB00E65899 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81BA81781A49E0DB00E65899 /* AudioToolbox.framework */; };
 		81BA817B1A49E0E500E65899 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81BA817A1A49E0E500E65899 /* SystemConfiguration.framework */; };
 		81BA817F1A49E0F000E65899 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81BA817E1A49E0F000E65899 /* libstdc++.6.dylib */; };
+		A91194451CD3EE4A006D5EF9 /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91194441CD3EE4A006D5EF9 /* PostCell.swift */; };
+		A911944B1CD3F1B9006D5EF9 /* FeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A911944A1CD3F1B9006D5EF9 /* FeedTableViewController.swift */; };
 		A91D7BEE1CD0271800342E58 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91D7BED1CD0271800342E58 /* Globals.swift */; };
 		A93B74A51CD12F2D00D93282 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B74A41CD12F2D00D93282 /* TableViewController.swift */; };
 		A96E4D8B1CD2B910001566DD /* image-placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = A96E4D8A1CD2B910001566DD /* image-placeholder.png */; };
@@ -38,6 +40,8 @@
 		81BA817A1A49E0E500E65899 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		81BA817E1A49E0F000E65899 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
 		81BA81801A49E10C00E65899 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
+		A91194441CD3EE4A006D5EF9 /* PostCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
+		A911944A1CD3F1B9006D5EF9 /* FeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTableViewController.swift; sourceTree = "<group>"; };
 		A91D7BED1CD0271800342E58 /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		A93B74A41CD12F2D00D93282 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		A96E4D8A1CD2B910001566DD /* image-placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image-placeholder.png"; sourceTree = "<group>"; };
@@ -92,6 +96,8 @@
 			isa = PBXGroup;
 			children = (
 				81BA814A1A49DA1800E65899 /* AppDelegate.swift */,
+				A911944A1CD3F1B9006D5EF9 /* FeedTableViewController.swift */,
+				A91194441CD3EE4A006D5EF9 /* PostCell.swift */,
 				A96E4D8D1CD2BCFB001566DD /* PostViewController.swift */,
 				81BA814C1A49DA1800E65899 /* ViewController.swift */,
 				A96E4D8C1CD2B91C001566DD /* Images */,
@@ -208,8 +214,10 @@
 				81BA814D1A49DA1800E65899 /* ViewController.swift in Sources */,
 				81BA814B1A49DA1800E65899 /* AppDelegate.swift in Sources */,
 				A91D7BEE1CD0271800342E58 /* Globals.swift in Sources */,
+				A911944B1CD3F1B9006D5EF9 /* FeedTableViewController.swift in Sources */,
 				A93B74A51CD12F2D00D93282 /* TableViewController.swift in Sources */,
 				A96E4D8E1CD2BCFB001566DD /* PostViewController.swift in Sources */,
+				A91194451CD3EE4A006D5EF9 /* PostCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +330,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hsoft.Pictagram;
 				PRODUCT_NAME = Pictagram;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -340,6 +349,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hsoft.Pictagram;
 				PRODUCT_NAME = Pictagram;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

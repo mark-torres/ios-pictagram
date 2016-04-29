@@ -78,7 +78,7 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
 		}
 		
 		// validate data size
-		let imageData = UIImageJPEGRepresentation(postImageView.image!, 0.8)
+		let imageData = UIImageJPEGRepresentation(postImageView.image!, 0.9)
 		let maxSize: Int = 1024 * 1024 * 10
 		if imageData?.length > maxSize {
 			showAlert("Warning!", alertMessage: "Image data is more than 10 MB")

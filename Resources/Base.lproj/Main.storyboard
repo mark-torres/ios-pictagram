@@ -118,10 +118,14 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="User List" id="1Ys-QF-6SJ">
-                        <barButtonItem key="leftBarButtonItem" title="Logout" id="j9Q-3b-Gpr"/>
+                        <barButtonItem key="leftBarButtonItem" title="Feed" id="kmD-aK-hfJ">
+                            <connections>
+                                <segue destination="e3m-NY-Lha" kind="show" identifier="feed" id="pAJ-XM-6X9"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Post" id="qQp-bj-ofK">
                             <connections>
-                                <segue destination="6yl-zm-pj5" kind="show" id="Zah-CK-qH0"/>
+                                <segue destination="6yl-zm-pj5" kind="show" identifier="post" id="Zah-CK-qH0"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -129,6 +133,76 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OKb-FX-MFY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1345" y="389"/>
+        </scene>
+        <!--Posts Feed-->
+        <scene sceneID="NNy-ew-WII">
+            <objects>
+                <tableViewController title="Posts Feed" id="e3m-NY-Lha" customClass="FeedTableViewController" customModule="Pictagram" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="364" sectionHeaderHeight="28" sectionFooterHeight="28" id="SNZ-vF-1sX">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PostCell" rowHeight="364" id="FcF-yU-4kR" customClass="PostCell" customModule="Pictagram" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92" width="320" height="364"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FcF-yU-4kR" id="Djb-LL-Wwe">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="363"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BV6-dh-rUg">
+                                            <rect key="frame" x="8" y="8" width="304" height="250"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="250" id="VOx-Td-dWQ"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cdj-HN-q7s">
+                                            <rect key="frame" x="8" y="266" width="304" height="21"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="21" id="3wu-5P-q8K"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" red="0.60000002384185791" green="0.60000002384185791" blue="0.60000002384185791" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mvJ-VV-aKL">
+                                            <rect key="frame" x="8" y="295" width="304" height="46"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="46" id="9bQ-Iu-qfv"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="BV6-dh-rUg" firstAttribute="trailing" secondItem="Djb-LL-Wwe" secondAttribute="trailingMargin" id="Ers-ZU-7uQ"/>
+                                        <constraint firstItem="mvJ-VV-aKL" firstAttribute="top" secondItem="Cdj-HN-q7s" secondAttribute="bottom" constant="8" id="G4l-k2-spn"/>
+                                        <constraint firstItem="BV6-dh-rUg" firstAttribute="top" secondItem="Djb-LL-Wwe" secondAttribute="topMargin" id="W8K-rB-m1m"/>
+                                        <constraint firstItem="mvJ-VV-aKL" firstAttribute="trailing" secondItem="Djb-LL-Wwe" secondAttribute="trailingMargin" id="a4b-dU-1uH"/>
+                                        <constraint firstItem="Cdj-HN-q7s" firstAttribute="leading" secondItem="Djb-LL-Wwe" secondAttribute="leadingMargin" id="rD5-3W-hbZ"/>
+                                        <constraint firstItem="mvJ-VV-aKL" firstAttribute="leading" secondItem="Djb-LL-Wwe" secondAttribute="leadingMargin" id="rP1-EC-A6f"/>
+                                        <constraint firstItem="Cdj-HN-q7s" firstAttribute="trailing" secondItem="Djb-LL-Wwe" secondAttribute="trailingMargin" id="w3V-xC-oSw"/>
+                                        <constraint firstItem="BV6-dh-rUg" firstAttribute="leading" secondItem="Djb-LL-Wwe" secondAttribute="leadingMargin" id="wt4-Sl-Vum"/>
+                                        <constraint firstItem="Cdj-HN-q7s" firstAttribute="top" secondItem="BV6-dh-rUg" secondAttribute="bottom" constant="8" id="yiC-vb-20s"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="messageLabel" destination="mvJ-VV-aKL" id="pQ3-g1-jNJ"/>
+                                    <outlet property="postImageView" destination="BV6-dh-rUg" id="YJR-mt-kHV"/>
+                                    <outlet property="usernameLabel" destination="Cdj-HN-q7s" id="ldX-V3-C6U"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="e3m-NY-Lha" id="COM-tH-I39"/>
+                            <outlet property="delegate" destination="e3m-NY-Lha" id="rEr-aB-p1u"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eR5-Su-Biz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1345" y="1058"/>
         </scene>
         <!--Post Image-->
         <scene sceneID="ylN-sd-ABu">
