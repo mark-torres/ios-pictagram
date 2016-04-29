@@ -79,6 +79,17 @@ class FeedTableViewController: UITableViewController {
 		cell.usernameLabel.text = userIds.indexOf(userId) != nil ? followedUsers[userId] : "username"
 		cell.messageLabel.text = post["message"] as? String ?? "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor."
 		
+		// load the image
+		let imageFile = post["image"] as! PFFile
+		imageFile.getDataInBackgroundWithBlock { (imageData: NSData?, error: NSError?) -> Void in
+			if error == nil {
+				if let imageData = imageData {
+					let image = UIImage(data: imageData)
+					cell.postImageView.image = image!
+				}
+			}
+		}
+		
         return cell
     }
 	
